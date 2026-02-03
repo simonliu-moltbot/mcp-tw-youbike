@@ -1,0 +1,9 @@
+services:
+  mcp-youbike:
+    build: .
+    image: mcp-tw-youbike
+    ports:
+      - "${PORT:-8000}:8000"
+    env_file:
+      - .env
+    restart: always
