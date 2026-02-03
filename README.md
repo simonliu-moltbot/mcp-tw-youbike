@@ -1,56 +1,45 @@
-# Taiwan YouBike 2.0 MCP Server
+# 🚲 YouBike 助手 (mcp-tw-youbike)
 
-An MCP server that provides real-time YouBike 2.0 station data in Taipei City.
-Uses official Open Data from Taipei City Government.
+這是一個基於 **FastMCP** 框架開發的 Model Context Protocol (MCP) 伺服器，支援查詢台灣各城市 YouBike 站點的即時車輛與空位。
 
-## Features
-- **Search Stations**: Find stations by name, address, or district (e.g., "Taipei 101", "Daan").
-- **Nearby Stations**: Find stations near a specific location (Latitude/Longitude).
-- **Real-time Data**: Returns available bikes and empty spaces instantly.
+## ✨ 特點
+- **雙傳輸模式**：同時支援 `stdio` (本機) 與 `streamable-http` (遠端/Docker) 模式。
+- **全台覆蓋**：支援雙北、桃園、台中、台南、高雄等地的 YouBike 2.0 數據。
+- **即時數據**：整合 PTX (TDX) 官方即時 API。
 
-## Setup
+---
 
-### Prerequisites
-- Python 3.10 or higher
-- `uv` or `pip`
+## 🚀 傳輸模式 (Transport Modes)
 
-### Installation
+### 1. 本機模式 (STDIO) - 預設
+適合與 Claude Desktop 搭配使用。
+```bash
+python src/server.py --mode stdio
+```
 
-1. Clone the repository:
-   ```bash
-   git clone <repo_url>
-   cd mcp-tw-youbike
-   ```
+### 2. 遠端模式 (HTTP)
+適合 Docker 部署與遠端存取。
+```bash
+python src/server.py --mode http --port 8000
+```
+- **服務 URL**: `http://localhost:8000/mcp`
 
-2. Create a virtual environment and install dependencies:
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+---
 
-## Configuration
+## 🔌 客戶端配置範例
 
-### Claude Desktop
-Add this to your `claude_desktop_config.json`:
-
+### Claude Desktop (STDIO)
 ```json
 {
   "mcpServers": {
-    "youbike": {
-      "command": "/absolute/path/to/mcp-tw-youbike/.venv/bin/python",
-      "args": ["/absolute/path/to/mcp-tw-youbike/src/server.py"]
+    "tw-youbike": {
+      "command": "python",
+      "args": ["/絕對路徑/src/server.py", "--mode", "stdio"]
     }
   }
 }
 ```
 
-### Dive
-Configure the server with the following settings:
-
-- **Type**: `stdio`
-- **Command**: `/absolute/path/to/mcp-tw-youbike/.venv/bin/python`
-- **Args**: `/absolute/path/to/mcp-tw-youbike/src/server.py`
-
-## License
-MIT
+### Dive / HTTP 客戶端
+- **Type**: `streamable`
+- **URL**: `http://localhost:8000/mcp`
